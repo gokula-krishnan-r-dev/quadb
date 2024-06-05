@@ -1,9 +1,11 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { login, logout } from '../redux/authSlice';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { login, logout } from "../redux/authSlice";
 
-const Authentication = () => {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+const Authentication: React.FC = () => {
+  const isAuthenticated: boolean = useSelector(
+    (state: any) => state.auth.isAuthenticated
+  );
   const dispatch = useDispatch();
 
   return (

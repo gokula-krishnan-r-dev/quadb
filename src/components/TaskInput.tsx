@@ -2,21 +2,23 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTask } from "../redux/taskSlice";
 import { toast } from "sonner";
+import TaskPriority from "../types";
 
-const TaskInput = () => {
-  const [task, setTask] = useState("");
-  const [priority, setPriority] = useState("Medium");
+const TaskInput: React.FC = () => {
+  const [task, setTask] = useState<string>("");
+  const [priority, setPriority] = useState<TaskPriority>(TaskPriority.Medium); // Assuming TaskPriority is an enum
+
   const dispatch = useDispatch();
 
   const handleAddTask = () => {
     if (!task) {
       toast.error("Task cannot be empty");
+      return;
     }
-    if (task.trim()) {
-      dispatch(addTask({ task, priority }));
-      setTask("");
-      toast.success("Task added successfully");
-    }
+
+    dispatch(addTask({ task, priority, completed: false }));
+    setTask("");
+    toast.success("Task added successfully");
   };
 
   return (
@@ -31,11 +33,13 @@ const TaskInput = () => {
       <select
         className="border p-4 w-full rounded-full mb-2"
         value={priority}
-        onChange={(e) => setPriority(e.target.value)}
+        onChange={(e) => setPriority(e.target.value as TaskPriority)}
       >
-        <option value="High">High</option>
-        <option value="Medium">Medium</option>
-        <option value="Low">Low</option>
+        {Object.values(TaskPriority).map((priority) => (
+          <option key={priority} value={priority}>
+            {priority}
+          </option>
+        ))}
       </select>
       <button
         className="bg-blue-500  text-white p-4 rounded-full w-full"

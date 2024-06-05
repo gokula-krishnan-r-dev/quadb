@@ -1,7 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+interface AuthState {
+  isAuthenticated: boolean;
+}
 
 // Load auth state from localStorage
-const loadAuthFromLocalStorage = () => {
+const loadAuthFromLocalStorage = (): AuthState => {
   try {
     const serializedState = localStorage.getItem("auth");
     if (serializedState === null) {
@@ -15,7 +19,7 @@ const loadAuthFromLocalStorage = () => {
 };
 
 // Save auth state to localStorage
-const saveAuthToLocalStorage = (authState) => {
+const saveAuthToLocalStorage = (authState: AuthState): void => {
   try {
     const serializedState = JSON.stringify(authState);
     localStorage.setItem("auth", serializedState);

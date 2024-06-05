@@ -1,7 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Task } from "../types";
 
 // Load tasks from localStorage
-const loadTasksFromLocalStorage = () => {
+const loadTasksFromLocalStorage = (): Task[] => {
   try {
     const serializedState = localStorage.getItem("tasks");
     if (serializedState === null) {
@@ -15,7 +16,7 @@ const loadTasksFromLocalStorage = () => {
 };
 
 // Save tasks to localStorage
-const saveTasksToLocalStorage = (tasks) => {
+const saveTasksToLocalStorage = (tasks: Task[]): void => {
   try {
     const serializedState = JSON.stringify(tasks);
     localStorage.setItem("tasks", serializedState);
@@ -28,23 +29,26 @@ const taskSlice = createSlice({
   name: "tasks",
   initialState: loadTasksFromLocalStorage(),
   reducers: {
-    addTask: (state, action) => {
+    addTask: (state, action: PayloadAction<Task>) => {
       const newState = [...state, action.payload];
       saveTasksToLocalStorage(newState);
       return newState;
     },
-    deleteTask: (state, action) => {
+    deleteTask: (state, action: PayloadAction<number>) => {
       const newState = state.filter((_, index) => index !== action.payload);
       saveTasksToLocalStorage(newState);
       return newState;
     },
-    editTask: (state, action) => {
+    editTask: (
+      state,
+      action: PayloadAction<{ index: number; task: string }>
+    ) => {
       const { index, task } = action.payload;
       state[index].task = task;
       saveTasksToLocalStorage(state);
       return state;
     },
-    toggleCompleteTask: (state, action) => {
+    toggleCompleteTask: (state, action: PayloadAction<number>) => {
       state[action.payload].completed = !state[action.payload].completed;
       saveTasksToLocalStorage(state);
       return state;

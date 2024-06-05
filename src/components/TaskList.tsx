@@ -3,28 +3,30 @@ import { useSelector, useDispatch } from "react-redux";
 import { deleteTask, editTask, toggleCompleteTask } from "../redux/taskSlice";
 import { toast } from "sonner";
 
-const TaskList = () => {
-  const tasks = useSelector((state) => state.tasks);
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [editingTask, setEditingTask] = useState("");
-  const [filter, setFilter] = useState("All");
+import { Task } from "../types";
+
+const TaskList: React.FC = () => {
+  const tasks: Task[] = useSelector((state: any) => state.tasks);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editingTask, setEditingTask] = useState<string>("");
+  const [filter, setFilter] = useState<string>("All");
   const dispatch = useDispatch();
 
-  const handleEdit = (index, task) => {
+  const handleEdit = (index: number, task: Task) => {
     setEditingIndex(index);
     setEditingTask(task.task);
 
     toast.info("You are in edit mode. Update the task and click save!");
   };
 
-  const handleSave = (index) => {
+  const handleSave = (index: number) => {
     dispatch(editTask({ index, task: editingTask }));
     setEditingIndex(null);
     setEditingTask("");
     toast.success("Task updated successfully!");
   };
 
-  const handleToggleComplete = (index) => {
+  const handleToggleComplete = (index: number) => {
     dispatch(toggleCompleteTask(index));
     toast.success("Task status updated successfully!");
   };
